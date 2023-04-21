@@ -1,12 +1,9 @@
+from django.shortcuts import get_object_or_404
+from posts.models import Group, Post
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
 
-from django.shortcuts import get_object_or_404
-
-from posts.models import Group, Post
 from .serializers import CommentSerializer, GroupSerializer, PostSerializer
-
-API_RAISE_403 = PermissionDenied('Изменение чужого контента запрещено!')
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -18,12 +15,12 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise API_RAISE_403
+            raise PermissionDenied('Изменение чужого контента запрещено!')
         super().perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise API_RAISE_403
+            raise PermissionDenied('Изменение чужого контента запрещено!')
         instance.delete()
 
 
@@ -46,10 +43,10 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise API_RAISE_403
+            raise PermissionDenied('Изменение чужого контента запрещено!')
         super().perform_update(serializer)
 
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            raise API_RAISE_403
+            raise PermissionDenied('Изменение чужого контента запрещено!')
         instance.delete()
